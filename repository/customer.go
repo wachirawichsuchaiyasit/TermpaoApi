@@ -9,6 +9,7 @@ type Customer struct {
 	Email    string
 	Verify   int32 `gorm:"default:0"`
 	Const    int32 `gorm:"default:0"`
+	Admin    int32 `gorm:"default:0"`
 }
 
 type CustomerRepository interface {

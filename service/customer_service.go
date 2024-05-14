@@ -48,6 +48,10 @@ func (s *customerService) Customer_ChangePassword(data CustomerRequest) (*Custom
 }
 
 func (s *customerService) Customer_AddMoney(data CustomerRequest) error {
+	if err := s.repo.AddCostUser(data.ID, data.Cost); err != nil {
+		return err
+	}
+
 	return nil
 }
 

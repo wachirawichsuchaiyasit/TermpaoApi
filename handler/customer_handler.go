@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Termpao/auth"
 	"github.com/Termpao/service"
 	"github.com/gin-gonic/gin"
 )
@@ -49,11 +50,37 @@ func (s *customerHandler) Login(c *gin.Context) {
 		return
 	}
 
-	// fmt.Println()
+	var token string
+	auth.NewToken(auth.TokenRequest{
+		TokenUser: &token,
+		EmailUser: user.Email,
+	})
+
+	c.SetCookie("token", token, 3600, "/", "localhost", false, true)
+
 	c.JSON(http.StatusOK, gin.H{
 		"UseId":    user.CustomerID,
 		"Email":    user.Email,
 		"Username": user.Username,
 	})
-	// c.String(http.StatusOK,
+
+}
+
+func (s *customerHandler) AddCost(c *gin.Context) {
+	customer := service.CustomerRequest{}
+
+	if err := c.BindJSON(&customer); err != nil {
+		c.Status(http.StatusNoContent)
+		return
+	}
+
+	err := s.service.Customer_AddMoney(customer)
+
+	if err != nil {
+		c.Status(http.StatusNoContent)
+		return
+	}
+
+	c.Status(http.StatusCreated)
+
 }

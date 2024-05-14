@@ -1,6 +1,7 @@
 package service
 
 type CustomerRequest struct {
+	ID       int    `json:"customer_id"`
 	Email    string `json:"customer_email"`
 	Password string `json:"customer_password"`
 	Username string `json:"customer_username"`

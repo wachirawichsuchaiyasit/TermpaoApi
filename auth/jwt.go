@@ -7,9 +7,14 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-func NewToken(tokenrequest *string) error {
+type TokenRequest struct {
+	TokenUser *string
+	EmailUser string
+}
+
+func NewToken(data TokenRequest) error {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"email": "admin@gmail.com",
+		"email": data.EmailUser,
 		"exp":   time.Now().Add(time.Hour * 24).Unix(),
 	})
 
@@ -19,12 +24,12 @@ func NewToken(tokenrequest *string) error {
 		return err
 	}
 
-	*tokenrequest = tokenstring
+	*data.TokenUser = tokenstring
 	return nil
 }
 
-func ParseToken(tokenreq *string) bool {
-	token, err := jwt.Parse(*tokenreq, func(token *jwt.Token) (interface{}, error) {
+func ParseToken(data TokenRequest) bool {
+	token, err := jwt.Parse(*data.TokenUser, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])

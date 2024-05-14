@@ -58,8 +58,14 @@ func (s *customerService) Customer_Login(data CustomerRequest) (*CustomerRespons
 		return nil, err
 	}
 
+	if check := helps.CheckHashPassword(data.Password, customer.Password); !check {
+		return nil, nil
+	}
+
 	return &CustomerResponse{
 		CustomerID: int(customer.ID),
+		Email:      customer.Email,
+		Username:   customer.Username,
 	}, nil
 
 }

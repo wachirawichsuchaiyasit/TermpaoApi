@@ -1,11 +1,9 @@
 package handler
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
-	"github.com/Termpao/auth"
 	"github.com/Termpao/service"
 	"github.com/gin-gonic/gin"
 )
@@ -31,14 +29,6 @@ func (s *customerHandler) Register(c *gin.Context) {
 		return
 	}
 
-	// var token string
-	// if err := auth.NewToken(&token); err != nil {
-	// 	c.Status(http.StatusInternalServerError)
-	// 	return
-	// }
-
-	// c.SetCookie("token", string(token), 3600, "/", "localhost", false, true)
-
 	c.Status(http.StatusAccepted)
 }
 
@@ -51,13 +41,19 @@ func (s *customerHandler) Login(c *gin.Context) {
 		return
 	}
 
-	token, err := c.Cookie("token")
+	user, err := s.service.Customer_Login(customer)
+
 	if err != nil {
+
 		c.Status(http.StatusNoContent)
 		return
 	}
-	if done := auth.ParseToken(&token); !done {
-		fmt.Println("asdasd")
-		return
-	}
+
+	// fmt.Println()
+	c.JSON(http.StatusOK, gin.H{
+		"UseId":    user.CustomerID,
+		"Email":    user.Email,
+		"Username": user.Username,
+	})
+	// c.String(http.StatusOK,
 }

@@ -1,7 +1,10 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/Termpao/handler"
+	"github.com/Termpao/middleware"
 	"github.com/Termpao/repository"
 	"github.com/Termpao/service"
 	"github.com/gin-gonic/gin"
@@ -27,6 +30,21 @@ func main() {
 
 	router.POST("/login", customerHandler.Login)
 	router.POST("/register", customerHandler.Register)
+
+	authorized := router.Group("/")
+
+	authorized.Use(middleware.Authorized())
+	{
+		authorized.POST("/test", func(ctx *gin.Context) {
+			ctx.String(http.StatusAccepted, "Heelow")
+		})
+
+		admin := authorized.Group("admin")
+
+		admin.POST("/test", func(ctx *gin.Context) {
+			ctx.String(http.StatusAccepted, "admin")
+		})
+	}
 
 	router.Run()
 }

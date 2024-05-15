@@ -18,4 +18,5 @@ type CustomerRepository interface {
 	DeleteUser(int) error
 	AddCostUser(int, int) error
 	GetUser(Customer) (*Customer, error)
+	ChangePassword(Customer) error
 }

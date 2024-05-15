@@ -43,8 +43,14 @@ func (s *customerService) Customer_Delete(id int) error {
 	return nil
 }
 
-func (s *customerService) Customer_ChangePassword(data CustomerRequest) (*CustomerResponse, error) {
-	return nil, nil
+func (s *customerService) Customer_ChangePassword(data CustomerRequest) error {
+	hashpassword, _ := helps.HashPassword(data.Password)
+	err := s.repo.EditUser(data.ID, repository.Customer{Password: hashpassword})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *customerService) Customer_AddMoney(data CustomerRequest) error {

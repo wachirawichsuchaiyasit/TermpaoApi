@@ -17,7 +17,7 @@ type CustomerResponse struct {
 type CustomerServiceRepo interface {
 	Customer_Create(CustomerRequest) (*CustomerResponse, error)
 	Customer_Delete(int) error
-	Customer_ChangePassword(CustomerRequest) (*CustomerResponse, error)
+	Customer_ChangePassword(CustomerRequest) error
 	Customer_AddMoney(CustomerRequest) error
 	Customer_Login(CustomerRequest) (*CustomerResponse, error)
 	// CustomerComment(CustomerRequest)

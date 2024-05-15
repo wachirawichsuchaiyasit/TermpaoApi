@@ -62,3 +62,10 @@ func (r *customerRepo) GetUser(data Customer) (*Customer, error) {
 
 	return &customer, nil
 }
+
+func (r *customerRepo) ChangePassword(data Customer) error {
+	if err := r.EditUser(int(data.ID), data); err != nil {
+		return err
+	}
+	return nil
+}

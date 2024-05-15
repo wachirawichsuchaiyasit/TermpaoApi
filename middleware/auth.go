@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Termpao/auth"
@@ -26,6 +27,7 @@ func (r *middlewareRepo) Authentication() gin.HandlerFunc {
 		})
 		if err != nil || !done {
 			c.AbortWithStatus(http.StatusUnauthorized)
+			return
 		}
 
 		c.Next()
@@ -37,6 +39,7 @@ func (r *middlewareRepo) Authorization() gin.HandlerFunc {
 		tokenUser, err := c.Cookie("token")
 		if err != nil {
 			c.AbortWithStatus(http.StatusUnauthorized)
+			return
 		}
 
 		token, err := jwt.Parse(tokenUser, func(t *jwt.Token) (interface{}, error) {
@@ -48,11 +51,11 @@ func (r *middlewareRepo) Authorization() gin.HandlerFunc {
 			if err != nil || customer.Admin == 0 {
 				c.AbortWithStatus(http.StatusUnauthorized)
 			}
-
 			c.Next()
-
+			return
 		}
 
+		fmt.Println("you not have premission admin")
 		c.AbortWithStatus(http.StatusUnauthorized)
 	}
 }

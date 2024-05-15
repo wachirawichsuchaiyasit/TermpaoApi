@@ -84,3 +84,20 @@ func (s *customerHandler) AddCost(c *gin.Context) {
 	c.Status(http.StatusCreated)
 
 }
+
+func (s *customerHandler) ChangePassword(c *gin.Context) {
+	customer := service.CustomerRequest{}
+
+	if err := c.BindJSON(&customer); err != nil {
+		c.Status(http.StatusNoContent)
+		return
+	}
+
+	err := s.service.Customer_ChangePassword(customer)
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	c.Status(http.StatusAccepted)
+}

@@ -22,6 +22,7 @@ func main() {
 	}
 
 	db.AutoMigrate(&repository.Customer{})
+	db.AutoMigrate(&repository.Product{})
 
 	customerDatabase := repository.NewCustomerDatabase(db)
 	customerService := service.NewCustomerService(customerDatabase)
@@ -31,6 +32,14 @@ func main() {
 	// middleware service
 	middlewareService := middleware.NewMiddleAuth(customerDatabase)
 
+	// handler repository
+	productDatabase := repository.NewProductRepository(db)
+	// handler Service
+	productService := service.NewProductService(productDatabase)
+
+	// handler product
+	productHandler := handler.NewProductHandler(productService)
+
 	router.POST("/login", customerHandler.Login)
 	router.POST("/register", customerHandler.Register)
 
@@ -38,6 +47,7 @@ func main() {
 
 	authorized.Use(middlewareService.Authentication())
 	{
+		authorized.POST("/editpassword", customerHandler.ChangePassword)
 		authorized.POST("/test", func(ctx *gin.Context) {
 			ctx.String(http.StatusAccepted, "Heelow")
 		})
@@ -47,6 +57,13 @@ func main() {
 		admin.Use(middlewareService.Authorization())
 		{
 			admin.POST("/addcost", customerHandler.AddCost)
+
+			// Product
+			admin.POST("/product", productHandler.CreateProduct)
+			admin.DELETE("/product", productHandler.RemoveProduct)
+			admin.PUT("/product", productHandler.EditProduct)
+			admin.GET("/products", productHandler.GetAllProduct)
+			admin.GET("/product", productHandler.GetProduct)
 		}
 	}
 

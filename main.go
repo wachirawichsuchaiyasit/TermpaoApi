@@ -1,8 +1,6 @@
 package main
 
 import (
-	"net/http"
-
 	"github.com/Termpao/handler"
 	"github.com/Termpao/middleware"
 	"github.com/Termpao/repository"
@@ -23,22 +21,25 @@ func main() {
 
 	db.AutoMigrate(&repository.Customer{})
 	db.AutoMigrate(&repository.Product{})
+	db.AutoMigrate(&repository.ItemOrder{})
 
+	// repository
 	customerDatabase := repository.NewCustomerDatabase(db)
-	customerService := service.NewCustomerService(customerDatabase)
+	productDatabase := repository.NewProductRepository(db)
+	itemRepository := repository.NewItemRepository(db)
 
+	// Service
+	customerService := service.NewCustomerService(customerDatabase)
+	productService := service.NewProductService(productDatabase)
+	itemService := service.NewItemService(itemRepository)
+
+	// handler
 	customerHandler := handler.NewCustomerHandler(customerService)
+	productHandler := handler.NewProductHandler(productService)
+	itemHandler := handler.NewitemHandler(itemService)
 
 	// middleware service
 	middlewareService := middleware.NewMiddleAuth(customerDatabase)
-
-	// handler repository
-	productDatabase := repository.NewProductRepository(db)
-	// handler Service
-	productService := service.NewProductService(productDatabase)
-
-	// handler product
-	productHandler := handler.NewProductHandler(productService)
 
 	router.POST("/login", customerHandler.Login)
 	router.POST("/register", customerHandler.Register)
@@ -48,12 +49,8 @@ func main() {
 	authorized.Use(middlewareService.Authentication())
 	{
 		authorized.POST("/editpassword", customerHandler.ChangePassword)
-		authorized.POST("/test", func(ctx *gin.Context) {
-			ctx.String(http.StatusAccepted, "Heelow")
-		})
 
 		admin := authorized.Group("admin")
-
 		admin.Use(middlewareService.Authorization())
 		{
 			admin.POST("/addcost", customerHandler.AddCost)
@@ -64,6 +61,13 @@ func main() {
 			admin.PUT("/product", productHandler.EditProduct)
 			admin.GET("/products", productHandler.GetAllProduct)
 			admin.GET("/product", productHandler.GetProduct)
+
+			// Items
+			admin.POST("/item", itemHandler.CreateItem)
+			admin.DELETE("/item", itemHandler.RemoveItem)
+			admin.PUT("/item", itemHandler.EditItem)
+			admin.GET("/items", itemHandler.GetAllItem)
+			admin.GET("/item", itemHandler.GetItem)
 		}
 	}
 

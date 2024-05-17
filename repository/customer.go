@@ -1,14 +1,12 @@
 package repository
 
-import "gorm.io/gorm"
-
 type Customer struct {
-	gorm.Model
+	ID       uint `gorm:"primarykey";"autoincrement:true"`
 	Username string
 	Password string
 	Email    string
 	Verify   int32 `gorm:"default:0"`
-	Const    int32 `gorm:"default:0"`
+	Cost     int32 `gorm:"default:0"`
 	Admin    int32 `gorm:"default:0"`
 }
 
@@ -19,4 +17,6 @@ type CustomerRepository interface {
 	AddCostUser(int, int) error
 	GetUser(Customer) (*Customer, error)
 	ChangePassword(Customer) error
+	GetDataItemAndUser(Customer, int) (*Customer, *ItemOrder, error)
+	AddOrder(Order) error
 }

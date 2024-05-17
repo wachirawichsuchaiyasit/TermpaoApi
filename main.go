@@ -22,21 +22,25 @@ func main() {
 	db.AutoMigrate(&repository.Customer{})
 	db.AutoMigrate(&repository.Product{})
 	db.AutoMigrate(&repository.ItemOrder{})
+	db.AutoMigrate(&repository.Order{})
 
 	// repository
 	customerDatabase := repository.NewCustomerDatabase(db)
 	productDatabase := repository.NewProductRepository(db)
 	itemRepository := repository.NewItemRepository(db)
+	orderRepository := repository.NewOrderRepository(db)
 
 	// Service
 	customerService := service.NewCustomerService(customerDatabase)
 	productService := service.NewProductService(productDatabase)
 	itemService := service.NewItemService(itemRepository)
+	orderService := service.NewOrderService(orderRepository)
 
 	// handler
 	customerHandler := handler.NewCustomerHandler(customerService)
 	productHandler := handler.NewProductHandler(productService)
 	itemHandler := handler.NewitemHandler(itemService)
+	orderHandler := handler.NewOrderHandler(orderService)
 
 	// middleware service
 	middlewareService := middleware.NewMiddleAuth(customerDatabase)
@@ -48,8 +52,13 @@ func main() {
 
 	authorized.Use(middlewareService.Authentication())
 	{
+		// Customer
 		authorized.POST("/editpassword", customerHandler.ChangePassword)
+		authorized.POST("/logout", customerHandler.Logout)
+		authorized.POST("/wallet_topup", customerHandler.TrueWallet_Payment)
+		authorized.POST("/buy", customerHandler.BuyItem)
 
+		// Admin Premission
 		admin := authorized.Group("admin")
 		admin.Use(middlewareService.Authorization())
 		{
@@ -68,6 +77,10 @@ func main() {
 			admin.PUT("/item", itemHandler.EditItem)
 			admin.GET("/items", itemHandler.GetAllItem)
 			admin.GET("/item", itemHandler.GetItem)
+
+			// Order
+			admin.POST("/order", orderHandler.Order)
+
 		}
 	}
 

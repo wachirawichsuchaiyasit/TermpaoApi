@@ -57,6 +57,8 @@ func main() {
 		authorized.POST("/logout", customerHandler.Logout)
 		authorized.POST("/wallet_topup", customerHandler.TrueWallet_Payment)
 		authorized.POST("/buy", customerHandler.BuyItem)
+		authorized.GET("/@me", customerHandler.GetData)
+		authorized.GET("/items", itemHandler.GetItemsProduct)
 
 		// Admin Premission
 		admin := authorized.Group("admin")

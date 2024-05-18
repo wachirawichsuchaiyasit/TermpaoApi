@@ -44,7 +44,7 @@ func (r *customerRepo) EditUser(id int, data Customer) error {
 }
 
 func (r *customerRepo) AddCostUser(id int, money int) error {
-	res := r.db.Model(&Customer{}).Where("id = ?", id).Update("const", money)
+	res := r.db.Model(&Customer{}).Where("id = ?", id).Update("cost", money)
 
 	if res.Error != nil {
 		return res.Error
@@ -54,7 +54,7 @@ func (r *customerRepo) AddCostUser(id int, money int) error {
 
 func (r *customerRepo) GetUser(data Customer) (*Customer, error) {
 	customer := data
-	res := r.db.First(&customer)
+	res := r.db.Where(data).Find(&customer)
 
 	if res.Error != nil {
 		return nil, res.Error

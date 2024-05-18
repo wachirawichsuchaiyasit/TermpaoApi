@@ -83,4 +83,27 @@ func (s *itemService) GetItem(id int) (*ItemRes, error) {
 		ItemPrice:       item.ItemPrice,
 		ItemDescription: item.ItemDescription,
 	}, nil
+
+}
+
+func (s *itemService) GetAllItemFromProduct(data ItemRes) ([]ItemRes, error) {
+
+	items, err := s.repo.GetsItemFromProduct(repository.ItemOrder{ProductId: data.ItemProdctId})
+
+	if err != nil {
+		return nil, nil
+	}
+
+	var itemRes []ItemRes
+
+	for _, item := range items {
+		itemRes = append(itemRes, ItemRes{
+			ItemID:          item.ItemID,
+			ItemName:        item.ItemName,
+			ItemPrice:       item.ItemPrice,
+			ItemDescription: item.ItemDescription,
+		})
+	}
+	return itemRes, nil
+
 }

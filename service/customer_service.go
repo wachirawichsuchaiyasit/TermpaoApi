@@ -95,9 +95,9 @@ func (s *customerService) Customer_Login(data CustomerRequest) (*CustomerRespons
 	if err != nil {
 		return nil, err
 	}
-
+	// fmt.Println(customer)
 	if check := helps.CheckHashPassword(data.Password, customer.Password); !check {
-		return nil, nil
+		return nil, errors.New("password not match")
 	}
 
 	return &CustomerResponse{
@@ -134,4 +134,22 @@ func (s *customerService) Customer_BuyItem(data CustomerItemReq) error {
 	}
 
 	return nil
+}
+
+func (s *customerService) Customer_GetData(data CustomerRequest) (*CustomerResponse, error) {
+
+	customer, err := s.repo.GetUser(repository.Customer{
+		Email: data.Email,
+	})
+
+	if err != nil {
+		return nil, nil
+	}
+
+	return &CustomerResponse{
+		CustomerID: int(customer.ID),
+		Email:      customer.Email,
+		Username:   customer.Username,
+		Cost:       int(customer.Cost),
+	}, nil
 }

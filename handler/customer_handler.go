@@ -46,6 +46,8 @@ func (s *customerHandler) Login(c *gin.Context) {
 		return
 	}
 
+	// fmt.Println(customer)
+
 	user, err := s.service.Customer_Login(customer)
 
 	if err != nil {
@@ -183,4 +185,27 @@ func (s *customerHandler) BuyItem(c *gin.Context) {
 
 func (s *customerHandler) GetHistorys(c *gin.Context) {
 
+}
+
+func (s *customerHandler) GetData(c *gin.Context) {
+
+	token, _ := c.Cookie("token")
+	claims := auth.ParseTokenData(auth.TokenRequest{TokenUser: &token})
+
+	email, ok := claims["email"].(string)
+
+	if !ok {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+	customer, err := s.service.Customer_GetData(service.CustomerRequest{
+		Email: email,
+	})
+
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	c.JSON(http.StatusAccepted, customer)
 }

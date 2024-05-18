@@ -53,5 +53,6 @@ type CustomerServiceRepo interface {
 	Customer_AddMoney(CustomerRequest) error
 	Customer_Login(CustomerRequest) (*CustomerResponse, error)
 	Customer_BuyItem(CustomerItemReq) error
+	Customer_GetData(CustomerRequest) (*CustomerResponse, error)
 	// CustomerComment(CustomerRequest)
 }

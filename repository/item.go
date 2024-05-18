@@ -14,4 +14,5 @@ type ItemRepository interface {
 	Delete(int) error
 	Get(int) (*ItemOrder, error)
 	Gets() ([]ItemOrder, error)
+	GetsItemFromProduct(ItemOrder) ([]ItemOrder, error)
 }

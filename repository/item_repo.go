@@ -52,3 +52,14 @@ func (r *itemRepo) Gets() ([]ItemOrder, error) {
 	return ItemOrder, nil
 
 }
+
+func (r *itemRepo) GetsItemFromProduct(data ItemOrder) ([]ItemOrder, error) {
+
+	Items := []ItemOrder{}
+
+	if res := r.db.Where(&ItemOrder{ProductId: data.ProductId}).Find(&Items); res.Error != nil {
+		return nil, res.Error
+	}
+
+	return Items, nil
+}

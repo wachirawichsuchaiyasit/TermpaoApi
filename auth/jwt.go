@@ -44,7 +44,6 @@ func ParseToken(data TokenRequest) bool {
 	}
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok {
-		fmt.Println(claims)
 
 		if float64(time.Now().Unix()) > claims["exp"].(float64) {
 			return false
@@ -57,4 +56,21 @@ func ParseToken(data TokenRequest) bool {
 
 	return true
 
+}
+
+func ParseTokenData(data TokenRequest) jwt.MapClaims {
+	claims := jwt.MapClaims{}
+	token, err := jwt.ParseWithClaims(*data.TokenUser, claims, func(t *jwt.Token) (interface{}, error) {
+		return []byte("suckmydick"), nil
+	})
+
+	if err != nil {
+		return nil
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok {
+		return claims
+	}
+
+	return nil
 }

@@ -14,4 +14,5 @@ type ItemService interface {
 	CreateItem(ItemRes) error
 	EditItem(int, ItemRes) error
 	DeleteItem(int) error
+	GetAllItemFromProduct(ItemRes) ([]ItemRes, error)
 }

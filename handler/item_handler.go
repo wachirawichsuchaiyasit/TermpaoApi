@@ -97,3 +97,26 @@ func (h *itemHandler) GetItem(c *gin.Context) {
 
 	c.JSON(http.StatusAccepted, item)
 }
+
+func (h *itemHandler) GetItemsProduct(c *gin.Context) {
+	item := service.ItemRes{}
+
+	if err := c.BindJSON(&item); err != nil {
+		c.Status(http.StatusNoContent)
+		return
+	}
+
+	items, err := h.service.GetAllItemFromProduct(item)
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	if len(items) == 0 {
+		c.Status(http.StatusNoContent)
+		return
+	}
+
+	c.JSON(http.StatusAccepted, items)
+
+}

@@ -14,6 +14,7 @@ import (
 )
 
 func main() {
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	db, err := gorm.Open(postgres.Open(os.Getenv("DATABASE")), &gorm.Config{})
 

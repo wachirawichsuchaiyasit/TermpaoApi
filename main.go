@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/Termpao/handler"
@@ -49,6 +50,11 @@ func main() {
 	// middleware service
 	middlewareService := middleware.NewMiddleAuth(customerDatabase)
 
+	router.GET("/home", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, gin.H{
+			"message": "pong",
+		})
+	})
 	router.POST("/login", customerHandler.Login)
 	router.POST("/register", customerHandler.Register)
 

@@ -18,6 +18,7 @@ func main() {
 	// if env_err != nil {
 	// 	panic("env errro")
 	// }
+	log.Fatalln(os.Getenv("DATABASE"), "Database")
 	router := gin.Default()
 	db, err := gorm.Open(postgres.Open(os.Getenv("DATABASE")), &gorm.Config{})
 

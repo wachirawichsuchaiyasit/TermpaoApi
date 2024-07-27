@@ -14,7 +14,6 @@ import (
 )
 
 func main() {
-	log.Fatalln(os.Getenv("PORT"), "This is a port")
 	router := gin.Default()
 	db, err := gorm.Open(postgres.Open(os.Getenv("DATABASE")), &gorm.Config{})
 
@@ -90,5 +89,5 @@ func main() {
 		}
 	}
 
-	router.Run()
+	router.Run(":" + os.Getenv("PORT"))
 }

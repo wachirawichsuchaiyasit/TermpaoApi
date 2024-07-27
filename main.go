@@ -14,11 +14,7 @@ import (
 )
 
 func main() {
-	// env_err := godotenv.Load(".env")
-	// if env_err != nil {
-	// 	panic("env errro")
-	// }
-	// log.Fatalln(os.Getenv("DATABASE"), "Database")
+	log.Fatalln(os.Getenv("PORT"), "This is a port")
 	router := gin.Default()
 	db, err := gorm.Open(postgres.Open(os.Getenv("DATABASE")), &gorm.Config{})
 

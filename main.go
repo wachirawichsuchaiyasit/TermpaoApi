@@ -1,21 +1,29 @@
 package main
 
 import (
+	"log"
+	"os"
+
 	"github.com/Termpao/handler"
 	"github.com/Termpao/middleware"
 	"github.com/Termpao/repository"
 	"github.com/Termpao/service"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func main() {
+	env_err := godotenv.Load(".env")
+	if env_err != nil {
+		panic("env errro")
+	}
 	router := gin.Default()
-	dsn := "host=localhost user=postgres password=NADERkungO15 dbname=Termpao port=5432 "
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(os.Getenv("DATABASE")), &gorm.Config{})
 
 	if err != nil {
+		log.Fatal(err)
 		panic(err)
 	}
 

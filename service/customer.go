@@ -43,9 +43,6 @@ type CustomerItemReq struct {
 	ProductID  int `json:"item_product_id"`
 }
 
-type CustomerItemRes struct {
-}
-
 type CustomerServiceRepo interface {
 	Customer_Create(CustomerRequest) (*CustomerResponse, error)
 	Customer_Delete(int) error

@@ -9,16 +9,15 @@ import (
 	"github.com/Termpao/repository"
 	"github.com/Termpao/service"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 func main() {
-	env_err := godotenv.Load(".env")
-	if env_err != nil {
-		panic("env errro")
-	}
+	// env_err := godotenv.Load(".env")
+	// if env_err != nil {
+	// 	panic("env errro")
+	// }
 	router := gin.Default()
 	db, err := gorm.Open(postgres.Open(os.Getenv("DATABASE")), &gorm.Config{})
 

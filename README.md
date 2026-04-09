@@ -9,5 +9,6 @@
 - Understanded hexagonal architecture.
 - More experience i got from the project like "how to organize your code"
 - I know the improtant process before come to coding is "System Design"
+- Uderstanded Rest-Api 
 
 But i didn't release the project because in the momented i don't know how to implement or connect to payment service like "Mobile Bank,Qr code promptpay"
